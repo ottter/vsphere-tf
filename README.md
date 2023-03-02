@@ -11,9 +11,13 @@ Figuring out how to use Hashicorp suite to do VMWare things. Any borrowed code o
 Install Prerequisites:
 
 ```sh
+# Add HashiCorp GPG key
 curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+# Add HashiCorp Linux repo
 sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+# Update and install packages
 sudo apt-get update && sudo apt-get install packer terraform whois
+# Clone this repo
 git clone https://github.com/ottter/vsphere-tf.git
 ```
 
@@ -21,21 +25,38 @@ Configure required sections:
 
 ```sh
 mkpasswd -m sha-512 --rounds=4096
-# Enter password in prompt and add output to vsphere-tf\packer-tek\http\user-data autoinstall => identity => password
+# Enter password in prompt and add output to path & location:
+# vsphere-tf\packer-tek\http\user-data autoinstall => identity => password
 ```
 
 ```sh
-cp packer-tek/variables.pkrvars-examples.hcl packer-tek/variables.pkrvars.hcl
+# Copy sensitive file examples to correct name scheme
+cp packer-tek/variables.pkrvars-example.hcl packer-tek/variables.pkrvars.hcl
+cp terraform/terraform-example.tfvars terraform/terraform.tfvars
 ```
 
-- Edit `packer-tek/variables.pkrvars100GBdisk.hcl` and `packer-tek/variables.pkrvars.hcl` to fit template requirements
+- Edit following files to match TEMPLATE requirements:
+  - `packer-tek/variables.pkrvars100GBdisk.hcl`
+  - `packer-tek/variables.pkrvars.hcl`
+
+- Edit following files to match SERVER requirements:
+  - `terraform/vars.auto.tfvars`
+  - `terraform/terraform.tfvars`
 
 Run:
 
 ```sh
-cd packer-tek
-packer build -force -on-error=ask -var-file variables.pkrvars100GBdisk.hcl -var-file variables.pkrvars.hcl ubuntu-22.04.pkr.hcl
-cd ../terraform
+# Create the Ubuntu server template
+cd vsphere-tf/packer-tek
+packer build -force -on-error=ask \
+    -var-file variables.pkrvars100GBdisk.hcl \
+    -var-file variables.pkrvars.hcl \
+    ubuntu-22.04.pkr.hcl
+```
+
+```sh
+# Create the Ubuntu server off of above template
+cd vsphere-tf/terraform
 terraform init
 terraform plan
 terraform apply 
