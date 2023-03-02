@@ -26,18 +26,18 @@ Configure required sections:
 ```sh
 mkpasswd -m sha-512 --rounds=4096
 # Enter password in prompt and add output to path & location:
-# vsphere-tf\packer-tek\http\user-data autoinstall => identity => password
+# vsphere-tf\packer\http\user-data autoinstall => identity => password
 ```
 
 ```sh
 # Copy sensitive file examples to correct name scheme
-cp packer-tek/variables.pkrvars-example.hcl packer-tek/variables.pkrvars.hcl
+cp packer/variables.pkrvars-example.hcl packer/variables.pkrvars.hcl
 cp terraform/terraform-example.tfvars terraform/terraform.tfvars
 ```
 
 - Edit following files to match TEMPLATE requirements:
-  - `packer-tek/variables.pkrvars100GBdisk.hcl`
-  - `packer-tek/variables.pkrvars.hcl`
+  - `packer/variables.pkrvars100GBdisk.hcl`
+  - `packer/variables.pkrvars.hcl`
 
 - Edit following files to match SERVER requirements:
   - `terraform/vars.auto.tfvars`
@@ -47,7 +47,7 @@ Run:
 
 ```sh
 # Create the Ubuntu server template
-cd vsphere-tf/packer-tek
+cd vsphere-tf/packer
 packer build -force -on-error=ask \
     -var-file variables.pkrvars100GBdisk.hcl \
     -var-file variables.pkrvars.hcl \
