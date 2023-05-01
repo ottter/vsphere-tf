@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     vsphere = {
-      source = "hashicorp/vsphere"
+      source  = "hashicorp/vsphere"
       version = "2.2.0"
     }
   }
@@ -19,7 +19,7 @@ locals {
     ipv4_gateway = var.ipv4_gateway,
     dns_server_1 = var.dns_server_list[0],
     dns_server_2 = var.dns_server_list[1],
-    public_key = var.public_key,
+    public_key   = var.public_key,
     ssh_username = var.ssh_username
   }
 }
@@ -43,22 +43,22 @@ data "vsphere_virtual_machine" "template" {
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 resource "vsphere_virtual_machine" "vm" {
-  name             = var.name
-  resource_pool_id = data.vsphere_compute_cluster.cluster.resource_pool_id
-  datastore_id  = data.vsphere_datastore.datastore.id
-  num_cpus    = var.cpu
+  name                 = var.name
+  resource_pool_id     = data.vsphere_compute_cluster.cluster.resource_pool_id
+  datastore_id         = data.vsphere_datastore.datastore.id
+  num_cpus             = var.cpu
   num_cores_per_socket = var.cores-per-socket
-  memory      = var.ram
-  guest_id       = var.vm-guest-id
+  memory               = var.ram
+  guest_id             = var.vm-guest-id
   network_interface {
     network_id   = data.vsphere_network.network.id
     adapter_type = data.vsphere_virtual_machine.template.network_interface_types[0]
   }
   disk {
-    label        = "${var.name}-disk"
+    label            = "${var.name}-disk"
     thin_provisioned = data.vsphere_virtual_machine.template.disks.0.thin_provisioned
-    eagerly_scrub   = data.vsphere_virtual_machine.template.disks.0.eagerly_scrub
-    size      = var.disksize == "" ? data.vsphere_virtual_machine.template.disks.0.size : var.disksize 
+    eagerly_scrub    = data.vsphere_virtual_machine.template.disks.0.eagerly_scrub
+    size             = var.disksize == "" ? data.vsphere_virtual_machine.template.disks.0.size : var.disksize
   }
   clone {
     template_uuid = data.vsphere_virtual_machine.template.id
