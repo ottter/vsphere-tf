@@ -1,0 +1,38 @@
+name: Setup Terraform via GitHub Actions
+# Source: https://github.com/marketplace/actions/hashicorp-setup-terraform
+
+# on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+
+env:
+  TF_LOG: INFO
+
+jobs:
+  terraform:
+    name: Check terraform file are formatted correctly
+    runs-on: ubuntu-latest
+
+    steps:
+    # Checkout the repository to the GitHub Actions runner
+      - name: Checkout
+        uses: actions/checkout@v3
+      
+      # Install the preferred version of Terraform CLI 
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+
+      - name: Terraform fmt
+        id: fmt
+        run: terraform fmt -recursive -no-color terraform
+        continue-on-error: true
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          commit-message: terraform fmt
+          title: Reformat terraform files
+          body: Update terraform files to canonical format using `terraform fmt`
+          branch: automated-terraform-fmt
