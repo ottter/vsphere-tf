@@ -53,7 +53,7 @@ jobs:
         id: merge_pr
         run: |
           git fetch --all
-          gh pr merge ${{ steps.create_pr.outputs.make_pr }} --delete-branch --squash
+          gh pr merge ${{ steps.create_pr.outputs.make_pr }} --delete-branch --squash --auto
           echo "pr url is ${{ steps.create_pr.outputs.make_pr }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
