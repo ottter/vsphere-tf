@@ -18,9 +18,14 @@ jobs:
   terraform:
     name: Check terraform file are formatted correctly
     runs-on: ubuntu-latest
+    
+    env:
+      PR_TITLE: "Apply terraform fmt changes"
+      PR_BODY: "GitHub Action that rewrites Terraform Config files to a canonical format and style"
+      PR_BRANCH: automated-terraform-fmt
 
     steps:
-    # Checkout the repository to the GitHub Actions runner
+      # Checkout the repository to the GitHub Actions runner
       - name: Checkout
         uses: actions/checkout@v3
       
@@ -28,14 +33,26 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
 
+      # Run Terraform fmt
       - name: Terraform fmt
         id: fmt
         run: terraform fmt -recursive -no-color
         continue-on-error: true
       
+      # Create the Pull Request and save the PR URL as a variable
       - name: Create Pull Request
         id: create_pr
-        run: gh pr create --title "Apply terraform fmt changes" --body "GitHub Action that rewrites Terraform Config files to a canonical format and style" --base automated-terraform-fmt
+        run: |
+          make_pr=$(gh pr create --title $PR_TITLE --body $PR_BODY --base $PR_BRANCH)
+          echo "make_pr" >> "$GITHUB_OUTPUT"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      # Merge the Pull Request using the saved URL from create_pr
+      - name: Merge Pull Request
+        id: merge_pr
+        run: echo "url is ${{ steps.create_pr.outputs.make_pr }}"
+#         run: gh pr merge --delete-branch $PR_BRANCH
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
