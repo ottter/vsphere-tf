@@ -20,8 +20,8 @@ jobs:
     runs-on: ubuntu-latest
     
     env:
-      PR_TITLE: "Apply terraform fmt changes"
-      PR_BODY: "GitHub Action that rewrites Terraform Config files to a canonical format and style"
+      PR_TITLE: Apply terraform fmt changes
+      PR_BODY: GitHub Action that rewrites Terraform Config files to a canonical format and style
       PR_BRANCH: automated-terraform-fmt
 
     steps:
@@ -43,7 +43,7 @@ jobs:
       - name: Create Pull Request
         id: create_pr
         run: |
-          make_pr=$(gh pr create --title $PR_TITLE --body $PR_BODY --base $PR_BRANCH)
+          make_pr=$(gh pr create --title "$PR_TITLE" --body "$PR_BODY" --base $PR_BRANCH)
           echo "make_pr" >> "$GITHUB_OUTPUT"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
