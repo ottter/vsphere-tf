@@ -52,7 +52,7 @@ jobs:
       - name: Merge Pull Request
         id: merge_pr
 #         run: echo "url is ${{ steps.create_pr.outputs.make_pr }}"
-        run: gh pr merge --delete-branch --squash $PR_BRANCH
+        run: gh pr merge $PR_BRANCH --delete-branch --squash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
