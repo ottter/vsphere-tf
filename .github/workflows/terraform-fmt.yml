@@ -37,12 +37,13 @@ jobs:
 
       - name: Create branch
         run: |
+          gh auth login --with-token <<< "${{ secrets.GITHUB_TOKEN }}"
           gh repo fork
           gh repo clone $REPO_NAME
           cd $REPO_NAME
           git checkout -b $PR_BRANCH
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # Run Terraform fmt
       - name: Terraform fmt
