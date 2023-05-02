@@ -3,7 +3,11 @@ name: Setup Terraform via GitHub Actions
 
 # on: [push, pull_request]
 on:
+  workflow_dispatch:
   push:
+    branches:
+      - main
+  pull_request:
     branches:
       - main
 
@@ -28,21 +32,28 @@ jobs:
         id: fmt
         run: terraform fmt -recursive -no-color
         continue-on-error: true
-
+      
       - name: Create Pull Request
         id: create_pr
-        uses: peter-evans/create-pull-request@v5
-        # https://github.com/marketplace/actions/create-pull-request
-        with:
-          commit-message: terraform fmt
-          title: Reformat terraform files
-          body: Update terraform files to canonical format using `terraform fmt`
-          branch: automated-terraform-fmt
+        run: gh pr create --title "Apply terraform fmt changes" --body "GitHub Action that rewrites Terraform Config files to a canonical format and style" --base automated-terraform-fmt
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
-      - name: Enable Pull Request Automerge
-        if: steps.create_pr.outputs.pull-request-operation == 'created'
-        # https://github.com/peter-evans/enable-pull-request-automerge
-        uses: peter-evans/enable-pull-request-automerge@v3
-        with:
-          pull-request-number: ${{ steps.create_pr.outputs.pull-request-number }}
-          merge-method: squash
+
+#       - name: Create Pull Request
+#         id: create_pr
+#         uses: peter-evans/create-pull-request@v5
+#         # https://github.com/marketplace/actions/create-pull-request
+#         with:
+#           commit-message: terraform fmt
+#           title: Reformat terraform files
+#           body: Update terraform files to canonical format using `terraform fmt`
+#           branch: automated-terraform-fmt
+        
+#       - name: Enable Pull Request Automerge
+#         if: steps.create_pr.outputs.pull-request-operation == 'created'
+#         # https://github.com/peter-evans/enable-pull-request-automerge
+#         uses: peter-evans/enable-pull-request-automerge@v3
+#         with:
+#           pull-request-number: ${{ steps.create_pr.outputs.pull-request-number }}
+#           merge-method: squash
