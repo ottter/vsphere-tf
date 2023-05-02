@@ -37,7 +37,6 @@ jobs:
 
       - name: Create branch
         run: |
-          gh auth login
           gh repo fork
           gh repo clone $REPO_NAME
           cd $REPO_NAME
