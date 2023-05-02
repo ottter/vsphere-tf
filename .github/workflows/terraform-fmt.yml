@@ -51,8 +51,8 @@ jobs:
       # Merge the Pull Request using the saved URL from create_pr
       - name: Merge Pull Request
         id: merge_pr
-        run: echo "url is ${{ steps.create_pr.outputs.make_pr }}"
-#         run: gh pr merge --delete-branch $PR_BRANCH
+#         run: echo "url is ${{ steps.create_pr.outputs.make_pr }}"
+        run: gh pr merge --squash ${{ steps.create_pr.outputs.make_pr }} --delete-branch $PR_BRANCH
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
