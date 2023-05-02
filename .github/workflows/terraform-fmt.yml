@@ -43,8 +43,8 @@ jobs:
       - name: Create Pull Request
         id: create_pr
         run: |
-          make_pr=$(gh pr create --title "$PR_TITLE" --body "$PR_BODY" --base $PR_BRANCH)
-          make_pr >> "$GITHUB_OUTPUT"
+          make_pr=$(gh pr create --title "$PR_TITLE" --body "$PR_BODY" --base $PR_BRANCH")
+          echo "MAKE_PR=make_pr >> "$GITHUB_OUTPUT"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
