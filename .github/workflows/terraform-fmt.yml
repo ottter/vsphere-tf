@@ -35,7 +35,7 @@ jobs:
       
       - name: Create Pull Request
         id: create_pr
-        run: gh pr create --title "Apply terraform fmt changes" --base automated-terraform-fmt
+        run: gh pr create --title "Apply terraform fmt changes" --body "GitHub Action that rewrites Terraform Config files to a canonical format and style" --base automated-terraform-fmt
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
