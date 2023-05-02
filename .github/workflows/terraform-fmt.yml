@@ -20,6 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     
     env:
+      REPO_FORK: origin
       PR_TITLE: Apply terraform fmt changes
       PR_BODY: GitHub Action that rewrites Terraform Config files to a canonical format and style
       PR_BRANCH: automated-terraform-fmt
@@ -33,11 +34,31 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
 
+#       - name: Create branch
+#         run: |
+#           gh auth login --with-token <<< "${{ secrets.GITHUB_TOKEN }}"
+#           gh repo fork
+#           gh repo clone <your_repo>
+#           cd <your_repo>
+#           git checkout -b my-new-feature
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       # Run Terraform fmt
       - name: Terraform fmt
         id: fmt
-        run: terraform fmt -recursive -no-color
+        run: |
+          terraform fmt -recursive -no-color
         continue-on-error: true
+        
+      - name: Commit changes
+        run: |
+          git add .
+          git commit -m "$PR_TITLE"
+
+      - name: Push changes
+        run: |
+          git push --set-upstream $REPO_FORK $PR_BRANCH
       
       # Create the Pull Request and save the PR URL as a variable
       - name: Create Pull Request
@@ -54,6 +75,5 @@ jobs:
         run: |
           git fetch --all
           gh pr merge ${{ steps.create_pr.outputs.make_pr }} --delete-branch --squash --auto
-          echo "pr url is ${{ steps.create_pr.outputs.make_pr }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
