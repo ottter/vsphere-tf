@@ -35,10 +35,10 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
 
-      - name: Create branch
-        run: |
-          gh auth login --with-token <<< "${{ secrets.GITHUB_TOKEN }}"
-          git checkout -b $PR_BRANCH
+#       - name: Create branch
+#         run: |
+#           gh auth login --with-token <<< "${{ secrets.GITHUB_TOKEN }}"
+#           git checkout -b $PR_BRANCH
 #         env:
 #           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -49,14 +49,14 @@ jobs:
           terraform fmt -recursive -no-color
         continue-on-error: true
         
-      - name: Commit changes
-        run: |
-          git add .
-          git commit -m "$PR_TITLE"
+#       - name: Commit changes
+#         run: |
+#           git add .
+#           git commit -m "$PR_TITLE"
 
-      - name: Push changes
-        run: |
-          git push --set-upstream $REPO_FORK $PR_BRANCH
+#       - name: Push changes
+#         run: |
+#           git push --set-upstream $REPO_FORK $PR_BRANCH
       
       # Create the Pull Request and save the PR URL as a variable
       - name: Create Pull Request
