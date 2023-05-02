@@ -52,6 +52,7 @@ jobs:
       - name: Merge Pull Request
         id: merge_pr
         run: |
+          git fetch --all
           gh pr merge ${{ steps.create_pr.outputs.make_pr }} --delete-branch --squash
           echo "pr url is ${{ steps.create_pr.outputs.make_pr }}"
         env:
